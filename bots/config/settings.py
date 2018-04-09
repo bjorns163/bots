@@ -110,6 +110,17 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     )
+#from django 1.8 new templates dir required
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(PROJECT_PATH, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            # ... some options here ...
+        },
+    },
+]
 #*******includes for django*************************************************************************
 LOCALE_PATHS = (
     os.path.join(PROJECT_PATH, 'locale'),
