@@ -30,7 +30,10 @@ def server_error(request, template_name='500.html'):
     exc_info = traceback.format_exc(None)
     botsglobal.logger.info(_('Ran into server error: "%(error)s"'),{'error':exc_info})
     temp = django.template.loader.get_template(template_name)  #You need to create a 500.html template.
-    return django.http.HttpResponseServerError(temp.render(django.template.Context({'exc_info':exc_info})))
+    try:
+        return django.http.HttpResponseServerError(temp.render(django.template.Context({'exc_info':exc_info})))
+    except TypeError:
+        return django.http.HttpResponseServerError(temp.render({'exc_info':exc_info}))
     
 
 def index(request,*kw,**kwargs):
