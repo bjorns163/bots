@@ -1,3 +1,5 @@
-django<1.8
-cherrypy<8.0
+django==3.0.8
+psycopg2-binary
+six
+cherrypy==8.0.1
 genshi
