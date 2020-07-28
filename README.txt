@@ -7,6 +7,9 @@ Commercial support by EbberConsult, http://www.ebbersconsult.com
 
 install on Linux:
      python3 setup_rpm.py  install
-     pip install requirements.txt 
+     pip3 install -r requirements.txt 
+
+  
+setup database:
 
   
