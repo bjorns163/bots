@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 from django.conf.urls import include,url
 import django
 from django.conf.urls import url, include
-from django.contrib.auth import login,logout
 from django.contrib.auth import views as auth_views
 from bots.views import index
 from django.contrib import admin
@@ -15,8 +14,8 @@ superuser_required = user_passes_test(lambda u: u.is_superuser)
 run_permission = user_passes_test(lambda u: u.has_perm('bots.change_mutex'))
 
 urlpatterns = [
-    url(r'^login.*', login,{'template_name': 'admin/login.html'}),
-    url(r'^logout.*', logout,{'next_page': '/'}),
+    url(r'^login.*', auth_views.LoginView.as_view(template_name='admin/login.html')),
+    url(r'^logout.*', auth_views.LogoutView.as_view(),{'next_page': '/'}),
     url(r'^password_change/$', auth_views.PasswordChangeView.as_view(), name='password_change'),
     url(r'^password_change/done/$', auth_views.PasswordChangeDoneView.as_view(),name='password_change_done'),
     #login required
