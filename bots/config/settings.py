@@ -117,10 +117,16 @@ TEMPLATES = [
         'DIRS': os.path.join(PROJECT_PATH, 'templates'),
         'APP_DIRS': True,
         'OPTIONS': {
-            # ... some options here ...
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
         },
     },
 ]
+
 #*******includes for django*************************************************************************
 LOCALE_PATHS = (
     os.path.join(PROJECT_PATH, 'locale'),
@@ -129,7 +135,7 @@ LOCALE_PATHS = (
 FILE_UPLOAD_HANDLERS = (
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
     )
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
