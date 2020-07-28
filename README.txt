@@ -3,3 +3,10 @@ Wiki/documentation: http://http://bots.readthedocs.io
 Wiki/documentation: http://skilchen.github.io/bots_doc_b/
 Bots is licenced under GNU GENERAL PUBLIC LICENSE Version 3; for full text: http://www.gnu.org/copyleft/gpl.html
 Commercial support by EbberConsult, http://www.ebbersconsult.com
+
+
+install on Linux:
+     python3 setup_rpm.py  install
+     pip install requirements.txt 
+
+  
