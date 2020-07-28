@@ -34,7 +34,7 @@ urlpatterns = [
     #only staff
     url(r'^admin/$', login_required(views.home)),  #do not show django admin root page
     url(r'^admin/bots/$', login_required(views.home)),  #do not show django admin root page
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
     url(r'^runengine.+', run_permission(views.runengine)),
     #only superuser
     url(r'^delete.*', superuser_required(views.delete)),
