@@ -1,13 +1,11 @@
 from __future__ import unicode_literals
 from django.conf.urls import include,url
 import django
-try:
-    from django.conf.url import patterns
-except:
-    ImportError
-    from django.conf.urls import url, include
-    from django.contrib.auth.views import login,logout,password_change,password_change_done
-    from bots.views import index
+from django.conf.urls import url, include
+from django.contrib.auth import login,logout
+from django.contrib.auth.views import PasswordResetView
+from bots.views import index
+
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required,user_passes_test
 from . import views
