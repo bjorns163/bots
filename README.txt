@@ -10,6 +10,11 @@ install on Linux:
      pip3 install -r requirements.txt 
 
   
-setup database:
+setup database SQLite in:
 
-  
+  /bots/config/settings.py
+  cp /usr/local/lib/python3.8/site-packages/bots/install/botsdb /usr/local/lib/python3.8/site-packages/bots/botssys/sqlitedb/botsdb
+
+
+Test bots engine:
+ bots-engine.py
