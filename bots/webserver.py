@@ -9,7 +9,12 @@ import django
 from django.core.handlers.wsgi import WSGIHandler
 from django.utils.translation import ugettext as _
 import cherrypy
-from cherrypy import wsgiserver
+try:
+    from cheroot.wsgi import Server as WSGIServer
+    from cheroot.wsgi import PathInfoDispatcher as WSGIPathInfoDispatcher
+except ImportError:
+    from cherrypy.wsgiserver import CherryPyWSGIServer as WSGIServer
+
 from . import botsglobal
 from . import botsinit
 
@@ -51,8 +56,8 @@ def start():
     #cherrypy handling of django
     servedjango = WSGIHandler()     #was: servedjango = AdminMediaHandler(WSGIHandler())  - django does not need the AdminMediaHandler.
     #cherrypy uses a dispatcher in order to handle the serving of static files and django.
-    dispatcher = wsgiserver.WSGIPathInfoDispatcher({'/': servedjango, str('/media'): servestaticfiles}) #UNICODEPROBLEM: needs to be binary
-    botswebserver = wsgiserver.CherryPyWSGIServer(bind_addr=('0.0.0.0', botsglobal.ini.getint('webserver','port',8080)), wsgi_app=dispatcher, server_name=botsglobal.ini.get('webserver','name','bots-webserver'))
+    dispatcher = WSGIPathInfoDispatcher({'/': servedjango, str('/media'): servestaticfiles}) #UNICODEPROBLEM: needs to be binary
+    botswebserver = WSGIServer(bind_addr=('0.0.0.0', botsglobal.ini.getint('webserver','port',8080)), wsgi_app=dispatcher, server_name=botsglobal.ini.get('webserver','name','bots-webserver'))
     botsglobal.logger.log(25,_('Bots %(process_name)s started.'),
                                 {'process_name':process_name})
     botsglobal.logger.log(25,_('Bots %(process_name)s configdir: "%(configdir)s".'),
