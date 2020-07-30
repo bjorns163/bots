@@ -1,112 +1,156 @@
 {% load i18n %}
-<div id="menu">
-{% if user.is_authenticated %}
-	<ul>
-		<a {% if not bots_touchscreen %} href="/home" {% endif %} >{% trans 'Home' %}</a>
-		<li><a href="/home/">{% trans 'Home' %}{% if not bots_touchscreen %} *{% endif %}</a></li>
-		<li><a href="http://code.google.com/p/bots/wiki/MonitorIntroduction">{% trans 'Help' %}</a></li>
-		<li><a href="/logout/">{% trans 'Log out' %}</a></li>
-		<li><a href="/password_change/">{% trans 'Change password' %}</a></li>
-	</ul>
-	<ul>
-		<a {% if not bots_touchscreen %} href="/incoming/?lastrun=1" {% endif %} >{% trans 'Last run' %}</a>
-		<li><a href="/incoming/?lastrun=1" >{% trans 'Incoming' %}{% if not bots_touchscreen %} *{% endif %}</a></li>
-		<li><a href="/document/?lastrun=1;status=320" >{% trans 'Document-in' %}</a></li>
-		<li><a href="/document/?lastrun=1;status=330" >{% trans 'Document-out' %}</a></li>
-		<li><a href="/outgoing/?lastrun=1" >{% trans 'Outgoing' %}</a></li>
-		<li><a href="/processes/?lastrun=1" >{% trans 'Process Errors' %}</a></li>
-	</ul>
-	<ul>
-		<a {% if not bots_touchscreen %} href="/reports/?lastrun=0" {% endif %} >{% trans 'All runs' %}</a>
-		<li><a href="/reports/?lastrun=0" >{% trans 'Report (per run)' %}{% if not bots_touchscreen %} *{% endif %}</a></li>
-		<li><a href="/incoming/?lastrun=0" >{% trans 'Incoming' %}</a></li>
-		<li><a href="/document/?lastrun=0;status=320" >{% trans 'Document-in' %}</a></li>
-		<li><a href="/document/?lastrun=0;status=330" >{% trans 'Document-out' %}</a></li>
-		<li><a href="/outgoing/?lastrun=0" >{% trans 'Outgoing' %}</a></li>
-		<li><a href="/confirm/?lastrun=0" >{% trans 'Confirmations' %}</a></li>
-		<li><a href="/processes/?lastrun=0" >{% trans 'Process Errors' %}</a></li>
-	</ul>
-	<ul>
-		<a {% if not bots_touchscreen %} href="/document/?select" {% endif %} >{% trans 'Select' %}</a>
-		<li><a href="/reports/?select" >{% trans 'Reports (per run)' %}</a></li>
-		<li><a href="/incoming/?select" >{% trans 'Incoming' %}</a></li>
-		<li><a href="/document/?select" >{% trans 'Document' %}{% if not bots_touchscreen %} *{% endif %}</a></li>
-		<li><a href="/outgoing/?select" >{% trans 'Outgoing' %}</a></li>
-		<li><a href="/processes/?select" >{% trans 'Process Errors' %}</a></li>
-		<li><a href="/confirm/?select" >{% trans 'Confirmations' %}</a></li>
-	</ul>
-	{% if user.is_staff %}
-	<ul>
-		<a>{% trans 'Config' %}</a>
-		{% if perms.bots.change_routes %}<li><a href="/admin/bots/routes/" >{% trans 'Routes' %}</a></li>{% endif %}
-		{% if perms.bots.change_channel %}<li><a href="/admin/bots/channel/" >{% trans 'Channels' %}</a></li>{% endif %}
-		{% if perms.bots.change_translate %}<li><a href="/admin/bots/translate/" >{% trans 'Translations' %}</a></li>{% endif %}
-		{% if perms.bots.change_partner %}<li><a href="/admin/bots/partner/" >{% trans 'Partners' %}</a></li>{% endif %}
-		{% if perms.bots.change_partner %}<li><a href="/admin/bots/partnergroep/" >{% trans 'Partnergroups' %}</a></li>{% endif %}
-		{% if perms.bots.change_confirmrule %}<li><a href="/admin/bots/confirmrule/" >{% trans 'Confirmrules' %}</a></li>{% endif %}
-		<li><hr/></li>
-		{% if perms.bots.change_ccode %}<li><a href="/admin/bots/ccode/" >{% trans 'User Codes list' %}</a></li>{% endif %}
-		{% if perms.bots.change_ccodetrigger %}<li><a href="/admin/bots/ccodetrigger/" >{% trans 'User Code types' %}</a></li>{% endif %}
-	</ul>
-	{% endif %}
-	{% if user.is_superuser %}
-	<ul>
-		<a>{% trans 'SysTasks' %}</a>
-		<li><a href="/plugin/" >{% trans 'Read plugin' %}</a></li>
-		<li><a href="/plugout/" >{% trans 'Make plugin' %}</a></li>
-		<li><a href="/plugout/backup" >{% trans 'Make backup plugin' %}</a></li>
-		<li><hr/></li>
-		<li><a href="/plugin/index" >{% trans 'Read configuration index' %}</a></li>
-		<li><a href="/plugout/index" >{% trans 'Make configuration index' %}</a></li>
-		<li><hr/></li>
-		<li><a href="/delete/" >{% trans 'Bulk delete' %}</a></li>
-		<li><hr/></li>
-		<li><a href="/admin/auth/user/" >{% trans 'Users' %}</a></li>
-		<li><a href="/admin/auth/group/" >{% trans 'UserGroups' %}</a></li>
-		<li><hr/></li>
-		<li><a href="/admin/bots/uniek/" >{% trans 'View/edit counters' %}</a></li>
-		<li><a href="/sendtestmail/">{% trans 'Send test report' %}</a></li>
-		<li><a href="/logfiler/" target="_blank">{% trans 'View logfiles' %}</a></li>
-	</ul>
-	{% endif %}
-	{% if perms.bots.change_mutex %} <!-- change mutex permission is required to run bots-engine! -->
-	<ul>
-		<a>{% trans 'Run' %}</a>
-		<li><a href="/runengine/?clparameter=--new" >{% trans 'Run (only new)' %}</a></li>
-		<li><hr/></li>
-		<li><a href="/runengine/?clparameter=--rereceive" >{% trans 'Run user-indicated rereceives' %}</a></li>
-		<li><a href="/runengine/?clparameter=--resend" >{% trans 'Run user-indicated resends' %}</a></li>
-		{% if menu_automaticretrycommunication %}
-			<li><a href="/runengine/?clparameter=--automaticretrycommunication" >{% trans 'Retry failed out-communications' %}</a></li>
-		{% endif %}
-		{% if menu_cleanup %}
-			<li><a href="/runengine/?clparameter=--cleanup" >{% trans 'Run cleanup' %}</a></li>
-		{% endif %}
-		{% if menu_all_routes %}
-			<li><hr/></li>
-			{% for route in menu_all_routes %}
-				<li><a href="/runengine/?clparameter={{ route|urlencode:'' }}" >{{ route }}</a></li>
-			{% endfor %}
-		{% endif %}
-	</ul>
-	{% endif %}
-	{% if custom_menus %}
-	<ul>
-		<a>{{ custom_menuname }}</a>
-		{% for key,value in custom_menus %}
-			{% ifequal '---' value %}
-				<li><hr/></li>
-			{% else %}
-				<li><a href="{{ value }}" >{{ key }}</a></li>
-			{% endifequal %}
-		{% endfor %}
-	</ul>
-	{% endif %}
-
-{% else %}
-	<ul>
-		<a href="/login/">{% trans 'Log in' %}</a>
-	</ul>
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="/home/" style="color:{{ bots_environment_text_color }}">
+	  <img src="{% static 'images/favicon.ico' %}" width="30" height="30" alt="" loading="lazy">
+  {{ bots_environment_text }}</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  {% if user.is_authenticated %}
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="/home/" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Home
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="https://bots.readthedocs.io/" target="_blank">Help</a>
+          <a class="dropdown-item" href="/logout/">Log out</a>
+          <a class="dropdown-item" href="/password_change/">Change password</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="/incoming/?lastrun=1" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Last run
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="/incoming/?lastrun=1">Incoming</a>
+          <a class="dropdown-item" href="/document/?lastrun=1;status=320">Document-in</a>
+          <a class="dropdown-item" href="/document/?lastrun=1;status=330">Document-out</a>
+	  <a class="dropdown-item" href="/outgoing/?lastrun=1">Outgoing</a>
+          <a class="dropdown-item" href="/processes/?lastrun=1">Process Errors</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="/reports/?lastrun=0" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          All runs
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="/reports/?lastrun=0">Report (per run)</a>
+          <a class="dropdown-item" href="/incoming/?lastrun=0">Incoming</a>
+          <a class="dropdown-item" href="/document/?lastrun=0;status=320">Document-in</a>
+	  <a class="dropdown-item" href="/document/?lastrun=0;status=330">Document-out</a>
+	  <a class="dropdown-item" href="/outgoing/?lastrun=0">Outgoing</a>
+	  <a class="dropdown-item" href="/confirm/?lastrun=0">Confirmations</a>
+	  <a class="dropdown-item" href="/processes/?lastrun=0">Process Errors</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="/document/?select" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Select
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="/reports/?select">Reports (per run)</a>
+          <a class="dropdown-item" href="/incoming/?select">Incoming</a>
+          <a class="dropdown-item" href="/document/?select">Document</a>
+          <a class="dropdown-item" href="/outgoing/?select">Outgoing</a>
+          <a class="dropdown-item" href="/processes/?select">Process Errors</a>
+          <a class="dropdown-item" href="/confirm/?select">Confirmations</a>	  
+        </div>
+      </li>
+      {% if user.is_staff %}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Configuration
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="/admin/bots/routes/">Routes</a>
+          <a class="dropdown-item" href="/admin/bots/channel/">Channels</a>
+	  <a class="dropdown-item" href="/admin/bots/translate/">Translations</a>
+          <a class="dropdown-item" href="/admin/bots/partner/">Partners</a>
+          <a class="dropdown-item" href="/admin/bots/partnergroep/">Partnergroups</a>
+          <a class="dropdown-item" href="/admin/bots/confirmrule/">Confirmrules</a>
+	  <hr/>
+          <a class="dropdown-item" href="/admin/bots/ccode/">User Codes list</a>
+          <a class="dropdown-item" href="/admin/bots/ccodetrigger/">User Code types</a>
+        </div>
+      </li>
+      {% endif %}
+      {% if user.is_superuser %}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          SysTasks
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="/plugin/">Read plugin</a>
+          <a class="dropdown-item" href="/plugout/">Make plugin</a>
+          <a class="dropdown-item" href="/plugout/backup">Make backup plugin</a>
+          <hr/>
+	  <a class="dropdown-item" href="/plugin/index">Read configuration index</a>
+          <a class="dropdown-item" href="/plugout/index">Make configuration index</a>
+          <hr/>
+	  <a class="dropdown-item" href="/delete/">Bulk delete</a>
+	  <hr/>
+          <a class="dropdown-item" href="/admin/auth/user/">Users</a>
+          <a class="dropdown-item" href="/admin/auth/group/">UserGroups</a>
+          <hr/>
+	  <a class="dropdown-item" href="/admin/bots/uniek/">View/edit counters</a>
+          <a class="dropdown-item" href="/sendtestmail/">Send test report</a>
+          <a class="dropdown-item" href="/logfiler/">View logfiles</a>
+        </div>
+      </li>
+      {% endif %}
+      {% if perms.bots.change_mutex %} <!-- change mutex permission is required to run bots-engine! -->
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Run
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="/runengine/?clparameter=--new">Run (only new)</a>
+          <hr/>
+	  <a class="dropdown-item" href="/runengine/?clparameter=--rereceive">Run user-indicated rereceives</a>
+          <a class="dropdown-item" href="/runengine/?clparameter=--resend">Run user-indicated resends</a>
+          {% if menu_automaticretrycommunication %}
+              <a class="dropdown-item" href="/runengine/?clparameter=--automaticretrycommunication">Retry failed out-communications</a>	  
+	  {% endif %}
+	  {% if menu_cleanup %}
+              <a class="dropdown-item" href="/runengine/?clparameter=--cleanup">Run cleanup</a>
+	  {% endif %}
+	  {% if menu_all_routes %}
+	      <hr/>
+	      {% for route in menu_all_routes %}
+	         <a class="dropdown-item" href="/runengine/?clparameter={{ route|urlencode:'' }}">{{ route }}</a>
+	      {% endfor %}	 
+	  {% endif %}
+        </div>
+      </li>
+      {% endif %}
+      {% if custom_menus %}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Custom menus
+        </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          {% for key,value in custom_menus %}
+	      {% ifequal '---' value %}
+	            <hr/>
+	      {% else %}
+	           <a class="dropdown-item" href="{{ value }}">{{ key }}</a>
+	      {% endifequal %}	   
+          {% endfor %}
+        </div>
+      </li>	  
+      {% endif %}
+    </ul>
+  </div>
+  {% else %}
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="/login/">Log in <span class="sr-only">(current)</span></a>
+      </li>
+    </ul>
+  </div>
 {% endif %}
-		<noscript>{% trans '*****Javascript is not enabled. Bots works better with javascript*****' %}</noscript>
-</div>
+</nav>

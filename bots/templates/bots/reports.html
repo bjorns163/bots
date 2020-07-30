@@ -1,43 +1,48 @@
-{% extends "admin/base.html" %}
+{% extends "admin/newbase.html" %}
 {% load i18n %}
 
 
 {% block content %}
+<br>
 <form action="{{ form.action }}" method="post">{% csrf_token %}
-    <input onClick="history.back()" type="button" value="{% trans 'Back' %}" />
-    <input type="submit" name="2select" value="{% trans 'Change selection' %}" />
+    <input onClick="history.back()" class="btn btn-secondary" type="button" value="{% trans 'Back' %}" />
+    <input type="submit" class="btn btn-secondary" name="2select" value="{% trans 'Change selection' %}" />
     {% include "bots/paginator.html" %}
 
-    <table id="botstable">
+    <div class="table-responsive-xl">
+    <table class="table table-striped table-hover table-sm" id="botstable">    
         {% for hidden in form.hidden_fields %}
             {{ hidden }}
         {% endfor %}
         <thead>
             <tr>
-                <th></th>
-                <th><button class="botsheader" type="submit" name="order" value="status" >{% trans 'State' %}</button></th>
-                <th><button class="botsheader" type="submit" name="order" value="type" >{% trans 'Type' %}</button></th>
-                <th><button class="botsheader" type="submit" name="order" value="lastreceived" >{% trans '#in' %}</button></th>
-                <th><button class="botsheader" type="submit" name="order" value="send" >{% trans '#out' %}</button></th>
-                <th><button class="botsheader" type="submit" name="order" value="ts" >{% trans 'Date/time' %}</button></th>
-                <th><button class="botsheader" >{% trans 'Size' %}</button></th>
-                <th><button class="botsheader" >{% trans 'Error' %}</button></th>
-                <th><button class="botsheader" >{% trans 'Commandline' %}</button></th>
-                <th><button class="botsheader" >{% trans 'Acceptance' %}</button></th>
-            </tr>
+                <th scope="col"></th>
+                <th scope="col"><button class="btn btn-secondary" type="submit" name="order" value="status" >{% trans 'State' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" type="submit" name="order" value="type" >{% trans 'Type' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" type="submit" name="order" value="lastreceived" >{% trans '#in' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" type="submit" name="order" value="send" >{% trans '#out' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" type="submit" name="order" value="ts" >{% trans 'Date/time' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" >{% trans 'Size' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" >{% trans 'Error' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" >{% trans 'Commandline' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" >{% trans 'Acceptance' %}</button></th>
+	    </tr>
         </thead>
         <tbody>
         {% for row in queryset.object_list %}
             <tr  class="{% cycle 'row1' 'row2' %}">
                 <td>
-                    <div class="dropdown"><img class="action" src="/media/images/star.png" />
-                        <ul>
-                            <li><button class="botsheader" type="submit" name="report2incoming" value="{{row.idta}}" >{% trans 'View incoming' %}</button></li>
-                            <li><button class="botsheader" type="submit" name="report2outgoing" value="{{row.idta}}" >{% trans 'View outgoing' %}</button></li>
-                            <li><button class="botsheader" type="submit" name="report2process" value="{{row.idta}}" >{% trans 'View process errors' %}</button></li>
-                            <li><button class="botsheader" type="submit" name="report2errors" value="{{row.idta}}" >{% trans 'View file errors' %}</button></li>
-                            <li><button class="botsheader" type="submit" name="report2commerrors" value="{{row.idta}}" >{% trans 'View out-communication errors' %}</button></li>
-                        </ul>
+                    <div class="dropdown">
+                            <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <img class="action" src="/media/images/star.png"  width="12" height="12"/>
+                            </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <button class="dropdown-item" type="submit" name="report2incoming" value="{{row.idta}}" >{% trans 'View incoming' %}</button>
+                            <button class="dropdown-item" type="submit" name="report2outgoing" value="{{row.idta}}" >{% trans 'View outgoing' %}</button>
+                            <button class="dropdown-item" type="submit" name="report2process" value="{{row.idta}}" >{% trans 'View process errors' %}</button>
+                            <button class="dropdown-item" type="submit" name="report2errors" value="{{row.idta}}" >{% trans 'View file errors' %}</button>
+                            <button class="dropdown-item" type="submit" name="report2commerrors" value="{{row.idta}}" >{% trans 'View out-communication errors' %}</button>
+                        </div>
                     </div>
                 </td>
                 <td>{% if row.status %}
@@ -50,11 +55,11 @@
                         <img src="/media/admin/img/icon_success.gif" style="width: 1em;"/>
                     {% endif %}
                 </td>
-                <td>{{row.type}}</td>
-                <td>{{row.lastreceived}}</td>
-                <td>{{row.send}}</td>
-                <td class="nowrap">{{row.ts|date:"Y-m-d H:i:s"}}</td>
-                <td class="nowrap">{% if row.filesize %}{{row.filesize|filesizeformat}}{% endif %}</td>
+                <td style="white-space:nowrap;">{{row.type}}</td>
+                <td style="white-space:nowrap;">{{row.lastreceived}}</td>
+                <td style="white-space:nowrap;">{{row.send}}</td>
+                <td style="white-space:nowrap;">{{row.ts|date:"Y-m-d H:i:s"}}</td>
+		<td style="white-space:nowrap;">{% if row.filesize %}{{row.filesize|filesizeformat}}{% endif %}</td>
                 <td>
                     {% if row.lasterror %}
                         {{row.lasterror}} {% trans 'files with errors' %}; 
@@ -80,5 +85,6 @@
         {% endfor %}
         </tbody>
     </table>
+    </div>
 </form>
 {% endblock %}

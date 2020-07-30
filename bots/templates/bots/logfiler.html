@@ -1,23 +1,21 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title>Bots Log File Viewer</title>
-    <META Http-Equiv="Pragma" Content="no-cache" />
-</head>
+{% extends "admin/newbase.html" %}
 {% load i18n %}
-<body>
-    {% if error_content %} 
-        {{ error_content }} 
-    {% else %}
-        <table id="log" border="1" cellpadding=5>
+{% block content %}
+
+{% if error_content %} 
+    {{ error_content }} 
+{% else %}
+<br>
+    <div class="table-responsive-xl">
+        <table class="table table-bordered table-striped table-sm" id="log">
             <tr>
                 <td><b>logfiles</b></td>
-                <td><b>{{ log }}</b>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/logfiler/?log={{ log }}&amp;action=download">{% trans 'Download' %}</a></td>
+                <td><b>{{ log }}</b>&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-link" href="/logfiler/?log={{ log }}&amp;action=download">{% trans 'Download' %}</a></td>
             </tr>
             <tr>
-                <td valign="top">
+                <td valign="top" style="white-space:nowrap;">
                     {% for file in logfiles %}
-                        <a href="/logfiler/?log={{ file }}">{{ file }}</a><br>
+                        <a class="btn btn-secondary w-100 p-1 m-1" href="/logfiler/?log={{ file }}">{{ file }}</a><br>
                     {% endfor %}
                 </td>
                 <td valign="top" colspan="2">
@@ -25,7 +23,6 @@
                 </td>
             </tr>
         </table>
-    {% endif %}
-</body>
-</html>
- 
+    <div>
+{% endif %}
+{% endblock %} 

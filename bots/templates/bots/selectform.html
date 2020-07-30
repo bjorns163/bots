@@ -1,4 +1,4 @@
-{% extends "admin/base.html" %}
+{% extends "admin/newbase.html" %}
 {% load i18n %}
 
 
@@ -48,6 +48,6 @@
     </table>
     <br/>&nbsp;
     <p></p>
-    <input type="submit" name="fromselect" value="{% trans 'Show selection' %}" />
+    <input type="submit" class="btn btn-secondary" name="fromselect" value="{% trans 'Show selection' %}" />
 </form>
 {% endblock %}

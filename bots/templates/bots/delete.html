@@ -1,4 +1,4 @@
-{% extends "admin/base.html" %}
+{% extends "admin/newbase.html" %}
 {% load i18n %}
 
 <div id="menu">
@@ -13,7 +13,7 @@
         {{ form }}
     </table>
     <br/>&nbsp;
-    <input type="submit" name="cancel" value="{% trans 'Cancel' %}" />
-    <input type="submit" name="submit" value="{% trans 'Bulk delete' %}" />
+    <input type="submit" class="btn btn-secondary" name="cancel" value="{% trans 'Cancel' %}" />
+    <input type="submit" class="btn btn-secondary" name="submit" value="{% trans 'Bulk delete' %}" />
 </form>
 {% endblock %}

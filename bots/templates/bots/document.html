@@ -1,64 +1,69 @@
-{% extends "admin/base.html" %}
+{% extends "admin/newbase.html" %}
 {% load i18n %}
 {% load botsfilters %}
 
 {% block content %}
+<br>
 <form action="{{ form.action }}" method="post">{% csrf_token %}
-    <input onClick="history.back()" type="button" value="{% trans 'Back' %}" />
-    <input type="submit" name="2select" value="{% trans 'Change selection' %}" />
+    <input onClick="history.back()" class="btn btn-secondary" type="button" value="{% trans 'Back' %}" />
+    <input type="submit" class="btn btn-secondary" name="2select" value="{% trans 'Change selection' %}" />
     {% include "bots/paginator.html" %}
-
-    <table id="botstable">
+    <div class="table-responsive-xl">
+    <table class="table table-striped table-hover table-sm" id="botstable">
         {% for hidden in form.hidden_fields %}
             {{ hidden }}
         {% endfor %}
         <thead>
             <tr>
-                <th></th>
-                <th><button class="botsheader" type="submit" name="order" value="status" >{% trans 'Phase' %}</button></th>
-                <th><button class="botsheader" type="submit" name="order" value="botskey" >{% trans 'Document number' %}</button></th>
-                <th><button class="botsheader" type="submit" name="order" value="reference" >{% trans 'Reference' %}</button></th>
-                <th><button class="botsheader" type="submit" name="order" value="ts" >{% trans 'Date/time' %}</button></th>
-                <th><button class="botsheader" type="submit" name="order" value="filename" >{% trans 'File' %}</button></th>
-                <th><button class="botsheader" type="submit" name="order" value="confirmtype" >{% trans 'ConfirmType' %}</button></th>
-                <th><button class="botsheader" type="submit" name="order" value="confirmidta" >{% trans 'ConfirmFile' %}</button></th>
-                <th><button class="botsheader" type="submit" name="order" value="editype" >{% trans 'Editype' %}</button></th>
-                <th><button class="botsheader" type="submit" name="order" value="messagetype" >{% trans 'Messagetype' %}</button></th>
-                <th><button class="botsheader" type="submit" name="order" value="idroute" >{% trans 'Route' %}</button></th>
-                <th><button class="botsheader" type="submit" name="order" value="fromchannel" >{% trans 'Channel' %}</button></th>
-                <th><button class="botsheader" type="submit" name="order" value="frompartner" >{% trans 'FromPartner' %}</button></th>
-                <th><button class="botsheader" type="submit" name="order" value="topartner" >{% trans 'ToPartner' %}</button></th>
-            </tr>
+                <th scope="col"></th>
+                <th scope="col"><button class="btn btn-secondary" type="submit" name="order" value="status" >{% trans 'Phase' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" type="submit" name="order" value="botskey" >{% trans 'Document number' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" type="submit" name="order" value="reference" >{% trans 'Reference' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" type="submit" name="order" value="ts" >{% trans 'Date/time' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" type="submit" name="order" value="filename" >{% trans 'File' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" type="submit" name="order" value="confirmtype" >{% trans 'ConfirmType' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" type="submit" name="order" value="confirmidta" >{% trans 'ConfirmFile' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" type="submit" name="order" value="editype" >{% trans 'Editype' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" type="submit" name="order" value="messagetype" >{% trans 'Messagetype' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" type="submit" name="order" value="idroute" >{% trans 'Route' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" type="submit" name="order" value="fromchannel" >{% trans 'Channel' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" type="submit" name="order" value="frompartner" >{% trans 'FromPartner' %}</button></th>
+                <th scope="col"><button class="btn btn-secondary" type="submit" name="order" value="topartner" >{% trans 'ToPartner' %}</button></th>
+
+	    </tr>
         </thead>
         <tbody>
         {% for row in queryset.object_list %}
             <tr class="{% cycle 'row1' 'row2' %}">
                 <td>
-                    <div class="dropdown"><img class="action" src="/media/images/star.png" />
-                        <ul>
+                    <div class="dropdown">
+			    <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <img class="action" src="/media/images/star.png"  width="12" height="12"/>
+                            </button>
+                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             {% if row.incoming %} 
-                                <li><button class="botsheader" onclick="document.location.href='/detail/?inidta={{row.incoming}}'; return false;" >{% trans 'View detail' %}</button></li>
-                                <li><button class="botsheader" onclick="window.open('/filer/?action=this&amp;idta={{row.incoming}}'); return false;" >{% trans 'View incoming file' %}</button></li>
-                                <li><button class="botsheader" type="submit" name="retransmit" value="{{row.incoming}}" >{% trans 'Rereceive' %}</button></li>
+                                <button class="dropdown-item" onclick="document.location.href='/detail/?inidta={{row.incoming}}'; return false;" >{% trans 'View detail' %}</button>
+                                <button class="dropdown-item" onclick="window.open('/filer/?action=this&amp;idta={{row.incoming}}'); return false;" >{% trans 'View incoming file' %}</button>
+                                <button class="dropdown-item" type="submit" name="retransmit" value="{{row.incoming}}" >{% trans 'Rereceive' %}</button>
                             {% else %}
-                                <li><button class="botsheader" onclick="window.open('/filer/?action=this&amp;idta={{row.outgoing}}'); return false;" >{% trans 'View outgoing file' %}</button></li>
+                                <button class="dropdown-item" onclick="window.open('/filer/?action=this&amp;idta={{row.outgoing}}'); return false;" >{% trans 'View outgoing file' %}</button>
                             {% endif %}
-                        </ul>
+                        </div>
                     </div>
                 </td>
-                <td>{{row.get_status_display}}</td>
-                <td><a href="/filer/?action=this&amp;idta={{row.idta}}" class="botslink" target="_blank" >{{row.botskey}}</a></td>
-                <td>{{row.reference}}</td>
-                <td class="nowrap">{{row.ts|date:"Y-m-d H:i:s"}}</td>
-                <td class="nowrap"><a href="/filer/?action=this&amp;idta={{row.idta}}" target="_blank" class="botslink" title="{{row.infilename}}" >{{row.filename|shortpath}}</a></td>
-                <td class="nowrap">
+                <td style="white-space:nowrap;">{{row.get_status_display}}</td>
+                <td style="white-space:nowrap;"><a href="/filer/?action=this&amp;idta={{row.idta}}" class="botslink" target="_blank" >{{row.botskey}}</a></td>
+                <td style="white-space:nowrap;">{{row.reference}}</td>
+                <td style="white-space:nowrap;">{{row.ts|date:"Y-m-d H:i:s"}}</td>
+                <td style="white-space:nowrap;"><a href="/filer/?action=this&amp;idta={{row.idta}}" target="_blank" class="botslink" title="{{row.infilename}}" >{{row.filename|shortpath}}</a></td>
+                <td style="white-space:nowrap;">
                     {% if row.confirmtype %}
                         {{row.confirmtype}}
                     {% else %}
                         {{row.confirmtext}}
                     {% endif %}
                 </td>
-                <td class="nowrap">
+                <td style="white-space:nowrap;">
                     {% if row.confirmidta > 0 %}
                         <a href="/filer/?action=this&amp;idta={{row.confirmidta}}" target="_blank" class="botslink">{{row.confirmidta}}</a>
                     {% else %}
@@ -67,16 +72,17 @@
                         {% endif %}
                     {% endif %}
                 </td>
-                <td class="nowrap">{{row.editype}}</td>
-                <td class="nowrap">{{row.messagetype}}</td>
-                <td class="nowrap">{{row.idroute}}</td>
-                <td class="nowrap">{{row.channel}}</td>
-                <td class="nowrap">{{row.frompartner}}</td>
-                <td class="nowrap">{{row.topartner}}</td>
+                <td style="white-space:nowrap;">{{row.editype}}</td>
+                <td style="white-space:nowrap;">{{row.messagetype}}</td>
+                <td style="white-space:nowrap;">{{row.idroute}}</td>
+                <td style="white-space:nowrap;">{{row.channel}}</td>
+                <td style="white-space:nowrap;">{{row.frompartner}}</td>
+                <td style="white-space:nowrap;">{{row.topartner}}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    </div>
 </form>
 {% endblock %}
 
