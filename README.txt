@@ -4,6 +4,13 @@ Wiki/documentation: http://skilchen.github.io/bots_doc_b/
 Bots is licenced under GNU GENERAL PUBLIC LICENSE Version 3; for full text: http://www.gnu.org/copyleft/gpl.html
 Commercial support by EbberConsult, http://www.ebbersconsult.com
 
+To make bots a little more modern I upgraded the user interface and all other packages.to be current versions
+Tested on Centos 8 server running:
+ -Python version	3.8.0
+ -Django version	(3, 0, 8, 'final', 0)
+ -CherryPy 18.6.0
+
+Therefor this version is called Bots 3.8 
 
 install on Linux:
      python3 setup_rpm.py  install
