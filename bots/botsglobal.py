@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 #Globals used by Bots
-version = '3.2.0'       #bots version
+version = '3.8.0'       #bots version
 db = None               #db-object
 ini = None              #ini-file-object that is read (bots.ini)
 logger = None           #logger or bots-engine

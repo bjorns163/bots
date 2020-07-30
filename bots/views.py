@@ -41,7 +41,7 @@ def index(request,*kw,**kwargs):
         index can be reached without being logged in.
         most of the time user is redirected to '/home'
     '''
-    return django.shortcuts.render(request,'admin/base.html')
+    return django.shortcuts.render(request,'admin/newbase.html')
 
 def home(request,*kw,**kwargs):
     return django.shortcuts.render(request,'bots/about.html',{'botsinfo':botslib.botsinfo()})
@@ -105,7 +105,7 @@ def incoming(request,*kw,**kwargs):
             idroute = request.GET.get('idroute')
             cleaned_data = {'page':1,'sortedby':'idta','sortedasc':False,'lastrun':lastrun,'idroute':idroute} #go to default incoming-query using these default parameters
     else: #request.method == 'POST'
-        print('XXXXXX2')
+        #print('XXXXXX2')
         if 'fromselect' in request.POST:        #from SelectIncoming form
             formin = forms.SelectIncoming(request.POST)
             if not formin.is_valid():

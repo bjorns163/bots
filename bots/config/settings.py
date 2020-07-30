@@ -18,41 +18,41 @@ EMAIL_HOST_PASSWORD = ''    #Default: ''. PASSWORD to use for the SMTP server de
 
 #*********database settings*************************
 #SQLite database (default bots database)
-#~ DATABASES = {
-    #~ 'default': {
-        #~ 'ENGINE': 'django.db.backends.sqlite3',
-        #~ 'NAME': os.path.join(PROJECT_PATH, 'botssys/sqlitedb/botsdb'),
-        #~ 'USER': '',         #not needed for SQLite
-        #~ 'PASSWORD': '',     #not needed for SQLite
-        #~ 'HOST': '',         #not needed for SQLite
-        #~ 'PORT': '',         #not needed for SQLite
-        #~ 'OPTIONS': {},      #not needed for SQLite
-        #~ }
-    #~ }
-#~ #MySQL:
-#~ DATABASES = {
-    #~ 'default': {
-        #~ 'ENGINE': 'django.db.backends.mysql',
-        #~ 'NAME': 'botsdb',
-        #~ 'USER': 'bots',
-        #~ 'PASSWORD': 'botsbots',
-        #~ 'HOST': '192.168.0.9',
-        #~ 'PORT': '3306',
-        #~ 'OPTIONS': {'use_unicode':True,'charset':'utf8','init_command': 'SET storage_engine=INNODB'},
-        #~ }
-    #~ }
-#~ #PostgreSQL:
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'botsdb',
-        'USER': 'bots',
-        'PASSWORD': 'botsbots',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-        'OPTIONS': {},
-        }
-    }
+     'default': {
+         'ENGINE': 'django.db.backends.sqlite3',
+         'NAME': os.path.join(PROJECT_PATH, 'botssys/sqlitedb/botsdb'),
+         'USER': '',         #not needed for SQLite
+         'PASSWORD': '',     #not needed for SQLite
+         'HOST': '',         #not needed for SQLite
+         'PORT': '',         #not needed for SQLite
+         'OPTIONS': {},      #not needed for SQLite
+         }
+     }
+ #MySQL:
+#DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'botsdb',
+#         'USER': 'bots',
+#         'PASSWORD': 'botsbots',
+#         'HOST': '192.168.0.9',
+#         'PORT': '3306',
+#         'OPTIONS': {'use_unicode':True,'charset':'utf8','init_command': 'SET storage_engine=INNODB'},
+#         }
+#     }
+#~ #PostgreSQL:
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#        'NAME': 'botsdb',
+#        'USER': 'bots',
+#        'PASSWORD': 'botsbots',
+#        'HOST': '127.0.0.1',
+#        'PORT': '5432',
+#        'OPTIONS': {},
+#        }
+#    }
 
 #*********setting date/time zone and formats *************************
 # Local time zone for this installation. Choices can be found here:
@@ -88,7 +88,6 @@ ALLOWED_HOSTS = ['*']
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True      #True: always log in when browser is closed
 SESSION_COOKIE_AGE = 3600                   #seconds a user needs to login when no activity
 SESSION_SAVE_EVERY_REQUEST = True           #if True: SESSION_COOKIE_AGE is interpreted as: since last activity
-
 #set in bots.ini
 #~ DEBUG = True
 #~ TEMPLATE_DEBUG = DEBUG
@@ -104,12 +103,6 @@ SECRET_KEY = 'm@-u37qiujmeqfbu$daaaaz)sp^7an4u@h=wfx9dd$$$zl2i*x9#awojdc'
     #~ 'django.template.loaders.app_directories.Loader',
     #~ )
 
-TEMPLATE_DIRS = (
-    os.path.join(PROJECT_PATH, 'templates'),
-    # Put strings here, like '/home/html/django_templates' or 'C:/www/django/templates'.
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    )
 #from django 1.8 new templates dir required
 TEMPLATES = [
     {
@@ -122,11 +115,19 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-            ],
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.static',
+                'bots.bots_context.set_context',
+            ],            
+#           'loaders': (
+##               # ADD LOADER HERE
+##               'apptemplates.Loader',
+#                'django.template.loaders.filesystem.Loader',
+#                'django.template.loaders.app_directories.Loader',
+#            ),
         },
     },
 ]
-
 #*******includes for django*************************************************************************
 LOCALE_PATHS = (
     os.path.join(PROJECT_PATH, 'locale'),
@@ -149,13 +150,4 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.messages',
     'bots',
-    )
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth', 
-    'django.core.context_processors.debug',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.request',
-    'django.contrib.messages.context_processors.messages',
-    'django.core.context_processors.static',
-    'bots.bots_context.set_context',
     )

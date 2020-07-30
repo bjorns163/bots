@@ -2,22 +2,29 @@ from __future__ import unicode_literals
 from django.conf.urls import include,url
 import django
 from django.conf.urls import url, include
+#from django.contrib.auth import login,logout
+#from django.contrib.auth.views import LoginView, logout_then_login, LogoutView
+#from django.contrib.auth.views import PasswordResetView
 from django.contrib.auth import views as auth_views
 from bots.views import index
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required,user_passes_test
 from . import views
 
+#admin.site.index_template = 'admin/newbase.html'
 admin.autodiscover()
 staff_required = user_passes_test(lambda u: u.is_staff)
 superuser_required = user_passes_test(lambda u: u.is_superuser)
 run_permission = user_passes_test(lambda u: u.has_perm('bots.change_mutex'))
 
 urlpatterns = [
-    url(r'^login.*', auth_views.LoginView.as_view(template_name='admin/login.html')),
-    url(r'^logout.*', auth_views.LogoutView.as_view(),{'next_page': '/'}),
-    url(r'^password_change/$', auth_views.PasswordChangeView.as_view(), name='password_change'),
-    url(r'^password_change/done/$', auth_views.PasswordChangeDoneView.as_view(),name='password_change_done'),
+    #url(r'^login.*', auth_views.LoginView.as_view(),{'template_name': 'admin/login.html'}),
+    url(r'^login.*', auth_views.LoginView.as_view(template_name='admin/bots_login.html')),
+    url(r'^logout.*', auth_views.LogoutView.as_view(template_name='admin/logged_out.html'),{'next_page': '/'}),
+    url(r'^password_change/$', auth_views.PasswordChangeView.as_view(template_name='admin/password_change_form.html'), name='password_change'),
+    url(r'^password_change/done/$', auth_views.PasswordChangeDoneView.as_view(template_name='admin/password_change_done.html'),name='password_change_done'),
+    #url(r'^password_change/$', password_change, name='password_change'),
+    #url(r'^password_change/done/$', password_change_done,name='password_change_done'),
     #login required
     url(r'^home.*', login_required(views.home)),
     url(r'^incoming.*', login_required(views.incoming)),
