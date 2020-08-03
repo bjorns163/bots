@@ -17,6 +17,7 @@ try:
 except:
    ImportError
    from six import python_2_unicode_compatible
+from django.utils.safestring import mark_safe
 from . import botsglobal
 from . import validate_email
 ''' Declare database tabels. 
@@ -178,18 +179,18 @@ def script_link1(script,linktext):
         used in translate (all scripts should exist, missing script is an error).
     '''
     if os.path.exists(script):
-        return '<a href="/srcfiler/?src=%s" target="_blank">%s</a>'%(urllib_quote(script.encode("utf-8")),linktext)
+        return mark_safe('<a href="/srcfiler/?src=%s" target="_blank">%s</a>'%(urllib_quote(script.encode("utf-8")),linktext))
     else:
-        return '<img src="/media/admin/img/icon-no.gif"></img> %s'%linktext
+        return mark_safe('<img src="/media/admin/img/icon-no.gif"></img> %s'%linktext)
 
 def script_link2(script):
     ''' if script exists return "yes" icon + view link; else return "no" icon
         used in routes, channels (scripts are optional)
     '''
     if os.path.exists(script):
-        return '<a class="nowrap" href="/srcfiler/?src=%s" target="_blank"><img src="/media/admin/img/icon-yes.gif"></img> view</a>'%urllib_quote(script.encode("utf-8"))
+        return mark_safe('<a class="nowrap" href="/srcfiler/?src=%s" target="_blank"><img src="/media/admin/img/icon-yes.gif"></img> view</a>'%urllib_quote(script.encode("utf-8")))
     else:
-        return '<img src="/media/admin/img/icon-no.gif"></img>'
+        return mark_safe('<img src="/media/admin/img/icon-no.gif"></img>')
 
 
 class MultipleEmailField(models.CharField):
@@ -287,7 +288,7 @@ class channel(models.Model):
     testpath = StripCharField(max_length=256,blank=True,verbose_name=_('Acceptance test path'),help_text=_('Path used during acceptance tests, see <a target="_blank" href="http://code.google.com/p/bots/wiki/DeploymentAcceptance">wiki</a>.'))           #added 20120111
 
     def communicationscript(self):
-        return script_link2(os.path.join(botsglobal.ini.get('directories','usersysabs'),'communicationscripts', self.idchannel + '.py'))
+        return mark_safe(script_link2(os.path.join(botsglobal.ini.get('directories','usersysabs'),'communicationscripts', self.idchannel + '.py')))
     communicationscript.allow_tags = True
     communicationscript.short_description = 'User script'
 
@@ -453,13 +454,13 @@ class routes(models.Model):
         return unicode(self.idroute) + ' ' + unicode(self.seq)
     def translt(self):
         if self.translateind == 0:
-            return '<img alt="%s" src="/media/admin/img/icon-no.gif"></img>'%(self.get_translateind_display())
+            return mark_safe('<img alt="%s" src="/media/admin/img/icon-no.gif"></img>'%(self.get_translateind_display()))
         elif self.translateind == 1:
-            return '<img alt="%s" src="/media/admin/img/icon-yes.gif"></img>'%(self.get_translateind_display())
+            return mark_safe('<img alt="%s" src="/media/admin/img/icon-yes.gif"></img>'%(self.get_translateind_display()))
         elif self.translateind == 2:
-            return '<img alt="%s" src="/media/images/icon-pass.gif"></img>'%(self.get_translateind_display())
+            return mark_safe('<img alt="%s" src="/media/images/icon-pass.gif"></img>'%(self.get_translateind_display()))
         elif self.translateind == 3:
-            return '<img alt="%s" src="/media/images/icon-pass_parse.gif"></img>'%(self.get_translateind_display())
+            return mark_safe('<img alt="%s" src="/media/images/icon-pass_parse.gif"></img>'%(self.get_translateind_display()))
     translt.allow_tags = True
     translt.admin_order_field = 'translateind'
 

@@ -42,7 +42,7 @@
                             <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <img class="action" src="/media/images/star.png"  width="12" height="12"/>
                             </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"><ul>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <button class="dropdown-item" onclick="document.location.href='/detail/?outidta={{row.idta}}'; return false;">{% trans 'View detail' %}</button>
                             <button class="dropdown-item" type="submit" name="confirm" value="{{row.idta}}" >{% trans 'Confirm manual' %}</button>
                         </div>

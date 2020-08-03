@@ -1,0 +1,7 @@
+{% load i18n %}
+<h3>{% blocktrans with filter_title=title %} By {{ filter_title }} {% endblocktrans %}</h3>
+
+{% for choice in choices %}
+    <button class="dropdown-item" onclick="document.location.href='{{ choice.query_string|iriencode }}'" title="{{ choice.display }}">{{ choice.display }}</button>
+{% endfor %}
+
