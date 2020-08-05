@@ -38,7 +38,7 @@ def start():
         print '    Found existing configuration files'
         print '        Configuration files bots.ini and settings.py not overwritten.'
         print '        Manual action is needed for these configuration files.'
-        print '        See bots wiki for more info: http://code.google.com/p/bots/wiki/Migrate.'
+        print '        See bots wiki for more info: https://bots.readthedocs.io/en/latest/change-migrate/'
     else:
         shutil.copy(join(botsdir,'install','bots.ini'),join(botsdir,'config','bots.ini'))
         shutil.copy(join(botsdir,'install','settings.py'),join(botsdir,'config','settings.py'))
@@ -52,7 +52,7 @@ def start():
         print '    Found existing database file botssys/sqlitedb/botsdb'
         print '        Manual action is needed to convert the database to new bots 3.0 format.'
         print '        There is a script to update the database.'
-        print '        See bots wiki for more info: http://code.google.com/p/bots/wiki/Migrate.'
+        print '        See bots wiki for more info: https://bots.readthedocs.io/en/latest/change-migrate/'
     else:
         if not os.path.exists(sqlitedir):    #use this to see if this is an existing installation
             os.makedirs(sqlitedir)
