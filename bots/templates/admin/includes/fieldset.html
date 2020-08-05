@@ -1,0 +1,28 @@
+{% load crispy_forms_tags %}
+<fieldset>
+    {% if fieldset.name %}<details><summary>{{ fieldset.name }}</summary>{% endif %}
+    {% if fieldset.description %}
+        <div class="description">{{ fieldset.description|safe }}</div>
+    {% endif %}
+    {% for line in fieldset %}
+        <div class="form-row {% if line.fields|length_is:'1' and line.errors %} errors{% endif %}{% if not line.has_visible_field %} hidden{% endif %}{% for field in line %}{% if field.field.name %} field-{{ field.field.name }}{% endif %}{% endfor %}">
+            {% if line.fields|length_is:'1' %}{{ line.errors }}{% endif %}
+            {% for field in line %}
+                <div class="form-group col-md-10">
+                    {% if not line.fields|length_is:'1' and not field.is_readonly %}{{ field.errors }}{% endif %}
+                    {% if field.is_checkbox %}
+                        {{ field.field |as_crispy_field }}
+                    {% else %}
+                        {% if field.is_readonly %}
+			    {{ field.label_tag }}
+                            <div class="readonly">{{ field.contents }}</div>
+                        {% else %}
+			   {{ field.field |as_crispy_field }}
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    {% if fieldset.name %}</details>{% endif %}
+</fieldset>

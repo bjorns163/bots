@@ -268,7 +268,7 @@ class channel(models.Model):
     apop = models.BooleanField(default=False,verbose_name='No check to-address',help_text=_('Do not check if incoming "to" email addresses is known.'))       #20110104: used as 'no check on "to:" email address'
     remove = models.BooleanField(default=False,help_text=_('Delete incoming edi files after reading.<br>Use in production else files are read again and again.'))
     path = StripCharField(max_length=256,blank=True)  #different from host - in ftp both host and path are used
-    filename = StripCharField(max_length=256,blank=True,help_text=_('Incoming: use wild-cards eg: "*.edi".<br>Outgoing: many options, see <a target="_blank" href="https://bots.readthedocs.io/en/latest/configuration/channel/filenames/">wiki</a>.<br>Advised: use "*" in filename (is replaced by unique counter per channel).<br>eg "D_*.edi" gives D_1.edi, D_2.edi, etc.'))
+    filename = StripCharField(max_length=256,blank=True,help_text=_('Incoming: use wild-cards eg: "*.edi".<br>Outgoing: many options, see <a target="_blank" href="https://bots.readthedocs.io/en/latest/configuration/channel/filenames">wiki</a>.<br>Advised: use "*" in filename (is replaced by unique counter per channel).<br>eg "D_*.edi" gives D_1.edi, D_2.edi, etc.'))
     lockname = StripCharField(max_length=35,blank=True,verbose_name=_('Lock-file'),help_text=_('Directory locking: if lock-file exists in directory, directory is locked for reading/writing.'))
     syslock = models.BooleanField(default=False,verbose_name=_('System locks'),help_text=_('Use system file locks for reading or writing edi files (windows, *nix).'))
     parameters = StripCharField(max_length=70,blank=True,help_text=_('For use in user communication scripting.'))

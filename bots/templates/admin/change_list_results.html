@@ -11,7 +11,7 @@
   <thead>
   <tr>
   {% for header in result_headers %}
-  <th scope="col" {{ header.class_attrib }}>
+  <th style="white-space:nowrap;" scope="col" {{ header.class_attrib }}>
      {% if header.sortable %}
        {% if header.sort_priority > 0 %}
          <div class="sortoptions">
@@ -27,14 +27,12 @@
   </tr>
   </thead>
   <tbody>
-  {% autoescape off %}
   {% for result in results %}
   {% if result.form and result.form.non_field_errors %}
       <tr><td colspan="{{ result|length }}">{{ result.form.non_field_errors }}</td></tr>
   {% endif %}
   <tr class="{% cycle 'row1' 'row2' %}">{% for item in result %}{{ item }}{% endfor %}</tr>
   {% endfor %}
-  {% endautoescape %}
   </tbody>
   </table>
  </div>
