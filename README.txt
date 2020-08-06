@@ -22,6 +22,11 @@ setup database SQLite in:
   /bots/config/settings.py
   cp /usr/local/lib/python3.8/site-packages/bots/install/botsdb /usr/local/lib/python3.8/site-packages/bots/botssys/sqlitedb/botsdb
 
+If you are migrating from old bots version you need to update your databasefile. For sqllite use for example https://sqlitebrowser.org/dl/
+Since Django 1.8 AbstractUser.last_login allows null values, so whe need to update the database.
+go to auth_user table and modify the tabel go to last_login an remove the Not Null (NN) and press ok. then its saved.
 
 Test bots engine:
  bots-engine.py
+ 
+ 
