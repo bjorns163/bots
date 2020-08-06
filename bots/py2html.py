@@ -13,11 +13,12 @@ __author__ = 'Raymond Hettinger'
 import sys
 if sys.version_info[0] > 2:
     import builtins
+    import html as cgi
 else:
     import __builtin__ as builtins
+    import cgi
 import keyword
 import tokenize
-import cgi
 import functools
 
 #### Analyze Python Source #################################
