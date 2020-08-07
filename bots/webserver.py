@@ -13,11 +13,12 @@ import cherrypy
 try:
     from cheroot.wsgi import Server as WSGIServer
     from cheroot.wsgi import PathInfoDispatcher as WSGIPathInfoDispatcher
+    from cheroot.ssl.builtin import BuiltinSSLAdapter
 except ImportError:
     from cherrypy.wsgiserver import CherryPyWSGIServer as WSGIServer
 from . import botsglobal
 from . import botsinit
-
+from distutils.version import StrictVersion
 
 def start():
     #NOTE: bots directory should always be on PYTHONPATH - otherwise it will not start.
@@ -69,9 +70,8 @@ def start():
     ssl_certificate = botsglobal.ini.get('webserver','ssl_certificate',None)
     ssl_private_key = botsglobal.ini.get('webserver','ssl_private_key',None)
     if ssl_certificate and ssl_private_key:
-        if cherrypy.__version__ >= '3.2.0':
-            adapter_class = wsgiserver.get_ssl_adapter_class('builtin')
-            botswebserver.ssl_adapter = adapter_class(ssl_certificate,ssl_private_key)
+        if StrictVersion(cherrypy.__version__) >= StrictVersion('3.2.0'):
+            botswebserver.ssl_adapter = BuiltinSSLAdapter(ssl_certificate,ssl_private_key)
         else:
             #but: pyOpenssl should be there!
             botswebserver.ssl_certificate = ssl_certificate
