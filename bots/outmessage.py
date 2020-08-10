@@ -534,6 +534,71 @@ class csv(var):
     def _getescapechars(self):
         return self.ta_info['escape']
 
+class excel(var):
+    def __init__(self,ta_info):
+        try:
+            self.xlsxwriter = botslib.botsbaseimport('xlsxwriter')
+        except ImportError:
+            raise ImportError(_('Dependency failure: editype "excel" requires python library "xlsxwriter".'))
+        super(excel,self).__init__(ta_info)
+        self.root = node.Node(record={})         #message tree; build via put()-interface in mappingscript. Initialise with empty dict
+
+    def _getescapechars(self):
+        return self.ta_info['escape']
+
+    def _write(self,node_instance,row):
+        ''' the write method for most classes.
+            tree is serialised to lex_records; lex_records are written to file.
+            Classses that write using other libraries (xml, json, template, db) use specific write methods.
+        '''
+        self.tree2records(node_instance)
+        value = self.record2string(self.lex_records)
+        field_sep = self.ta_info['field_sep']
+        try:
+            for col,colvalue in enumerate(list(value.split(field_sep))):
+                self._outstream.write(row,col,colvalue)
+        except UnicodeError as msg:
+            content = botslib.get_relevant_text_for_UnicodeError(msg)
+            raise botslib.OutMessageError(_('[F50]: Characters not in character-set "%(char)s": %(content)s'),
+                                            {'char':self.ta_info['charset'],'content':content})
+    def writeall(self):
+        ''' writeall is called for writing all 'real' outmessage objects; but not for envelopes.
+            writeall is call from transform.translate()
+        '''
+        self.messagegrammarread(typeofgrammarfile='grammars')
+        self.checkmessage(self.root,self.defmessage)
+        self.checkforerrorlist()
+        self.nrmessagewritten = 0
+        if self.root.record:        #root record contains information; write whole tree in one time
+            self.multiplewrite = False
+            self._initwrite()
+            self._write(self.root)
+            self.nrmessagewritten = 1
+            self.ta_info['nrmessages'] = self.nrmessagewritten
+            self._closewrite()
+        elif not self.root.children:
+            raise botslib.OutMessageError(_('No outgoing message'))    #then there is nothing to write...
+        else:
+            self.multiplewrite = True
+            self._initwrite()
+            for childnode in self.root.children:
+                self._write(childnode,self.nrmessagewritten)
+                self.nrmessagewritten += 1
+
+            if not isinstance(self,(csv,fixed)):
+                self.ta_info['nrmessages'] = self.nrmessagewritten
+            self._closewrite()
+
+    def _initwrite(self):
+        botsglobal.logger.debug('Start writing to file "%(filename)s".',self.ta_info)
+        self._outfile = self.xlsxwriter.Workbook(botslib.abspathdata(self.ta_info['filename']))
+        self._outstream = self._outfile.add_worksheet()
+        bold = self._outfile.add_format({'bold': 1})
+
+    def _closewrite(self):
+        botsglobal.logger.debug('End writing to file "%(filename)s".',self.ta_info)
+        self._outfile.close()
+
 class edifact(var):
     def _getescapechars(self):
         terug = self.ta_info['record_sep']+self.ta_info['field_sep']+self.ta_info['sfield_sep']+self.ta_info['escape']
