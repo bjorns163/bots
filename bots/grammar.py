@@ -902,6 +902,18 @@ class x12(Grammar):
             else:
                 field[DECIMALS] = 0
 class json(Grammar):
+    formatconvert = {
+        'A':'A',        #alfanumerical
+        'AN':'A',       #alfanumerical
+        'B':'B',    #BOOLEAN = custom
+        'D':'D',        #date
+        'DT':'D',       #date-time
+        'T':'T',        #time
+        'TM':'T',       #time
+        'N':'N',        #numerical, fixed decimal. Fixed nr of decimals; if no decimal used: whole number, integer
+        'R':'R',        #numerical, any number of decimals; the decimal point is 'floating'
+        'I':'I',        #numercial, implicit decimal
+        }
     defaultsyntax = {
         'charset':'utf-8',
         'checkcharsetin':'strict', #strict, ignore or botsreplace (replace with char as set in bots.ini).

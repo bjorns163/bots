@@ -441,6 +441,41 @@ class Node(object):
         botsglobal.logmap.debug('"True" for put %(mpaths)s',{'mpaths':unicode(mpaths)})
         return True
 
+    def putraw(self,*mpaths,**kwargs):
+        #sanity check of mpaths
+        if not mpaths or not isinstance(mpaths,tuple):
+            raise botslib.MappingFormatError(_(u'Must be dicts in tuple: put(%(mpath)s)'),{'mpath':mpaths})
+        for part in mpaths:
+            if not isinstance(part,dict):
+                raise botslib.MappingFormatError(_(u'Must be dicts in tuple: put(%(mpath)s)'),{'mpath':mpaths})
+            if 'BOTSID' not in part:
+                raise botslib.MappingFormatError(_(u'Section without "BOTSID": put(%(mpath)s)'),{'mpath':mpaths})
+            for key,value in part.iteritems():
+                if value is None:
+                    botsglobal.logmap.debug(u'"None" in put %(mpaths)s.',{'mpaths':unicode(mpaths)})
+                    return False
+                if not isinstance(key,basestring):
+                    raise botslib.MappingFormatError(_(u'Keys must be strings: put(%(mpath)s)'),{'mpath':mpaths})
+                if isinstance(value,list):
+                    #empty is not useful, drop it (like None)
+                    if not value:
+                        botsglobal.logmap.debug(u'Empty list in put %(mpaths)s.',{'mpaths':unicode(mpaths)})
+                        return False
+                #else: #no conversion to unicode string
+                #    if kwargs.get('strip',True):
+                #        part[key] = unicode(value).strip()  #leading and trailing spaces are stripped from the values
+                #    else:
+                #        part[key] = unicode(value)          #used for fixed ISA header of x12
+            if 'BOTSIDnr' not in part:
+                part['BOTSIDnr'] = u'1'
+
+        if self._sameoccurence(mpaths[0]):
+            self._putcore(mpaths[1:])
+        else:
+            raise botslib.MappingRootError(_(u'Error in root put "%(mpath)s".'),{'mpath':mpaths[0]})
+        botsglobal.logmap.debug(u'"True" for put %(mpaths)s',{'mpaths':unicode(mpaths)})
+        return True
+    
     def _putcore(self,mpaths):
         if not mpaths:  #newmpath is exhausted, stop searching.
             return

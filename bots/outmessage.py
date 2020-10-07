@@ -258,7 +258,7 @@ class Outmessage(message.Message):
 
 
     def _formatfield(self,value, field_definition,structure_record,node_instance):
-        ''' Input: value (as a string) and field definition.
+        ''' Input: value (normally a string, except for putraw() under JSON) and field definition.
             Some parameters of self.syntax are used, eg decimaal
             Format is checked and converted (if needed).
             return the formatted value
@@ -275,6 +275,10 @@ class Outmessage(message.Message):
             if len(value) < field_definition[MINLENGTH]:
                 self.add2errorlist(_('[F21]: Record "%(record)s" field "%(field)s" too small (min %(min)s): "%(content)s".\n')%
                                     {'record':self.mpathformat(structure_record[MPATH]),'field':field_definition[ID],'content':value,'min':field_definition[MINLENGTH]})
+        elif field_definition[BFORMAT] == 'B': #Boolean (json)
+            if not isinstance(value, bool):
+                self.add2errorlist(_(u'[F35]: Record "%(record)s" field "%(field)s" is not of type bool.\n')%
+                                    {'record':self.mpathformat(structure_record[MPATH]),'field':field_definition[ID],'content':value})
         elif field_definition[BFORMAT] in 'DT':
             lenght = len(value)
             if field_definition[BFORMAT] == 'D':
@@ -311,7 +315,7 @@ class Outmessage(message.Message):
                 if lenght < field_definition[MINLENGTH]:
                     self.add2errorlist(_('[F34]: Record "%(record)s" time field "%(field)s" too small (min %(min)s): "%(content)s".\n')%
                                         {'record':self.mpathformat(structure_record[MPATH]),'field':field_definition[ID],'content':value,'min':field_definition[MINLENGTH]})
-        else:   #numerics
+        elif isinstance(value, unicode): #only if text, not when a raw numeric value is given (putraw() json)
             #~ if value[0] == '-':
                 #~ minussign = '-'
                 #~ absvalue = value[1:]

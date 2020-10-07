@@ -206,7 +206,7 @@ class Message(object):
             if field_definition[ISFIELD]:    #if field (no composite)
                 if field_definition[MAXREPEAT] == 1:    #if non-repeating
                     value = noderecord.get(field_definition[ID])
-                    if not value:
+                    if value is None:
                         if field_definition[MANDATORY]:
                             self.add2errorlist(_('[F02]%(linpos)s: Record "%(mpath)s" field "%(field)s" is mandatory.\n')%
                                                 {'linpos':node_instance.linpos(),'mpath':self.mpathformat(record_definition[MPATH]),'field':field_definition[ID]})
@@ -424,6 +424,12 @@ class Message(object):
             raise botslib.MappingRootError(_('put(%(mpath)s): "root" of outgoing message is empty; use out.putloop'),
                                             {'mpath':mpaths})
         return self.root.put(*mpaths,**kwargs)
+    
+    def putraw(self,*mpaths,**kwargs):
+        if self.root.record is None and self.root.children:
+            raise botslib.MappingRootError(_(u'put(%(mpath)s): "root" of outgoing message is empty; use out.putloop'),
+                                            {'mpath':mpaths})
+        return self.root.putraw(*mpaths,**kwargs)
 
     def putloop(self,*mpaths):
         if not self.root.record:    #no input yet, and start with a putloop(): dummy root
