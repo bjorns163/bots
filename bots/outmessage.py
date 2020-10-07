@@ -797,7 +797,13 @@ class json(Outmessage):
             indent = 2
         else:
             indent = None
-        simplejson.dump(jsonobject, self._outstream, skipkeys=False, ensure_ascii=False, check_circular=False, indent=indent)
+        #Bots expects 1 root record in JSON you can have multiple so if you put them all in the Root record then it will strip the root tag in writing the file
+        #Default root tag name is ROOT elese define yours in grammar syntax defaultBOTSIDroot
+        try:
+            simplejson.dump(jsonobject[self.ta_info['defaultBOTSIDroot']], self._outstream, skipkeys=False, ensure_ascii=False, check_circular=False, indent=indent)
+        except:
+            simplejson.dump(jsonobject, self._outstream, skipkeys=False, ensure_ascii=False, check_circular=False, indent=indent)
+
 
     def _closewrite(self):
         if self.multiplewrite:
