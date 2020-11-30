@@ -700,6 +700,8 @@ class _comsession(object):
                 ta.infilename = infilestr(os.path.basename(ta_list[-1].filename))
             else:
                 ta.infilename = ''
+        else:
+            ta.infilename = ''
         if '{datetime' in tofilename:
             if botsglobal.ini.getboolean('acceptance','runacceptancetest',False):
                 ta.datetime = datetime.datetime.strptime('2013-01-23 01:23:45', '%Y-%m-%d %H:%M:%S')
