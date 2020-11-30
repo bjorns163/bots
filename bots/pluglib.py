@@ -199,7 +199,7 @@ def read_index2database(orgpluglist):
         #remember the plugintype
         plugintype = plug['plugintype']
             
-        table = django.db.models.get_model('bots',plugintype)
+        table = django.apps.apps.get_model('bots',plugintype)
 
         #delete fields not in model for compatibility; note that 'plugintype' is also removed.
         for key in list(plug.keys()):
@@ -228,7 +228,7 @@ def read_index2database(orgpluglist):
 
         #get real column names for fields in plug
         for fieldname in list(plug.keys()):
-            fieldobject = table._meta.get_field_by_name(fieldname)[0]
+            fieldobject = table._meta.get_field(fieldname)
             try:
                 if fieldobject.column != fieldname:     #if name in plug is not the real field name (in database)
                     plug[fieldobject.column] = plug[fieldname]  #add new key in plug
@@ -237,7 +237,7 @@ def read_index2database(orgpluglist):
                 raise botslib.PluginError(_('No field column for: "%(fieldname)s".'),{'fieldname':fieldname})
         #get real column names for fields in sleutel; basically the same loop but now for sleutel
         for fieldname in list(sleutel.keys()):
-            fieldobject = table._meta.get_field_by_name(fieldname)[0]
+            fieldobject = table._meta.get_field(fieldname)
             try:
                 if fieldobject.column != fieldname:
                     sleutel[fieldobject.column] = sleutel[fieldname]
@@ -333,7 +333,7 @@ def database2plug(db_table):
     plugs = serializers.serialize('python', db_table.objects.all())
     if plugs:
         app,tablename = plugs[0]['model'].split('.',1)
-        table = django.db.models.get_model(app,tablename)
+        table = django.apps.apps.get_model(app,tablename)
         pk = table._meta.pk.name
         #adapt plugs
         for plug in plugs:
