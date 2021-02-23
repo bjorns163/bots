@@ -6,3 +6,4 @@ django-crispy-forms
 genshi
 xlrd
 xlsxwriter
+requests
