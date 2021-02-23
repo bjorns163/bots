@@ -865,7 +865,9 @@ class Uri(object):
         fullhost = self._uri['hostname'] + port if self._uri['hostname'] else ''
         authority = '//' + userinfo + fullhost if fullhost else ''
         if self._uri['path'] or self._uri['filename']:
-            terug = os.path.join(authority,self._uri['path'],self._uri['filename'])
+            terug = os.path.join(authority,self._uri['path'])
+            #dont change upload URL per file 
+            #terug = os.path.join(authority,self._uri['path'],self._uri['filename'])
         else:
             terug = authority
         return scheme + terug
