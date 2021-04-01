@@ -192,7 +192,7 @@ def grammar2file(botsgrammarfilename,structure,recorddefs,targetNamespace):
         result = result.replace("'" + targetNamespace,shortNamespace + "+'")
     result2 += result
     
-    f = open(botsgrammarfilename,'wb')
+    f = open(botsgrammarfilename,'w')
     f.write(result2)
     f.close()
     print('grammar file is written:',botsgrammarfilename)
