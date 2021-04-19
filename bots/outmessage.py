@@ -783,8 +783,8 @@ class xmlnocheck(xml):
 class json(Outmessage):
     def _initwrite(self):
         super(json,self)._initwrite()
-        if self.multiplewrite:
-            self._outstream.write('[')
+        #if self.multiplewrite:
+        #    self._outstream.write('[')
 
     def _write(self,node_instance):
         ''' convert node tree to appropriate python object.
@@ -806,19 +806,31 @@ class json(Outmessage):
 
 
     def _closewrite(self):
-        if self.multiplewrite:
-            self._outstream.write(']')
+        #if self.multiplewrite:
+        #    self._outstream.write(']')
         super(json,self)._closewrite()
 
     def _node2json(self,node_instance):
         ''' recursive method.
         '''
         #newjsonobject is the json object assembled in the function.
+        structure=self.defmessage.structure[0]
         newjsonobject = node_instance.record.copy()    #init newjsonobject with record fields from node
         for childnode in node_instance.children: #fill newjsonobject with the lex_records from childnodes.
             key = childnode.record['BOTSID']
+            max_occurs = 0
+            for structure_record in structure[LEVEL]:
+                if structure_record[0] == key:
+                    max_occurs = structure_record[2]
+                    break
+                else:
+                    max_occurs = self._get_max_occurs(structure_record,key)
+                    if max_occurs != None :
+                        break
             if key in newjsonobject:
                 newjsonobject[key].append(self._node2json(childnode))
+            elif max_occurs == 1: #Controls if json object is Array or Objecs  [ or {
+                newjsonobject[key] = self._node2json(childnode)
             else:
                 newjsonobject[key] = [self._node2json(childnode)]
         del newjsonobject['BOTSID']
@@ -827,6 +839,18 @@ class json(Outmessage):
         except:
             pass
         return newjsonobject
+
+    def _get_max_occurs(self,structure_record,key):
+        try:
+            if structure_record[LEVEL]:
+                for structure_record_next in structure_record[LEVEL]:
+                    if structure_record_next[0] == key:
+                        max_occurs = structure_record_next[2]
+                        return max_occurs
+                    else:
+                        self._get_max_occurs(structure_record_next,key)
+        except:
+            KeyError       
 
     def _node2jsonold(self,node_instance):
         ''' recursive method.
