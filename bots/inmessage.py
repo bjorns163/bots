@@ -850,11 +850,11 @@ class excel(csv):
                                             {'txt':txt})
         rawinputfile = StringIO.StringIO()
         csvout = csvlib.writer(rawinputfile, quotechar=self.ta_info['quote_char'], delimiter=self.ta_info['field_sep'], doublequote=doublequote, escapechar=self.ta_info['escape'])
-        csvout.writerows( map(self.utf8ize, xlsdata) )
+        csvout.writerows(xlsdata)
         rawinputfile.seek(0)
         self.rawinput = rawinputfile.read()
         rawinputfile.close()
-        self.rawinput = self.rawinput.decode('utf-8')
+        self.rawinput = self.rawinput
         #start lexing and parsing as csv
         self._lex()
         if hasattr(self,'rawinput'):
@@ -872,11 +872,10 @@ class excel(csv):
         # Read excel first sheet into a 2-d array
         book       = self.xlrd.open_workbook(infilename)
         sheet      = book.sheet_by_index(0)
-        #~ formatter  = lambda(t,v): self.format_excelval(book,t,v,False)  # python3
         xlsdata = []
         for row in range(sheet.nrows):
             (types, values) = (sheet.row_types(row), sheet.row_values(row))
-            xlsdata.append(map(formatter, zip(types, values)))
+            xlsdata.append(map(lambda t,v : self.format_excelval(book,t,v,False),types, values))
         return xlsdata
     #-------------------------------------------------------------------------------
     def format_excelval(self,book,datatype,value,wanttupledate):
@@ -899,10 +898,6 @@ class excel(csv):
         datestring = '%04d-%02d-%02d'  % (y,m,d)    if filter(nonzero,(y,m,d)) else ''
         timestring = 'T%02d:%02d:%02d' % (hh,mm,ss) if filter(nonzero,(hh,mm,ss)) or not datestring else ''
         return datestring+timestring
-    #-------------------------------------------------------------------------------
-    def utf8ize(self,l):
-        # Make string-like things into utf-8, leave other things alone
-        return [unicode(s).encode('utf-8') if hasattr(s,'encode') else s for s in l]
 
 
 class edifact(var):
@@ -1613,3 +1608,4 @@ class raw(Inmessage):
 
     def nextmessage(self):
         yield self
+
