@@ -8,3 +8,5 @@ xlrd
 xlsxwriter
 requests
 paramiko
+Crypto
+pycrypto
