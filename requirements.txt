@@ -7,3 +7,4 @@ genshi
 xlrd
 xlsxwriter
 requests
+paramiko
