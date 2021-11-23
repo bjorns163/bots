@@ -106,6 +106,33 @@ INFO     Bots Report; type: new, time: 2021-11-23 16:16:46
 #now check if webserver will run
 /usr/local/bin/bots-webserver.py
 
-#make bots webserver run automaticly on boot
+#if you get this all is working:
+20211123 16:19:28 STARTINFO: Bots webserver started.
+20211123 16:19:28 STARTINFO: Bots webserver configdir: "/usr/local/lib/python3.10/site-packages/bots/config".
+20211123 16:19:28 STARTINFO: Bots webserver serving at port: "9000".
+20211123 16:19:28 STARTINFO: Bots webserver uses plain http (no ssl).
+
+#configure the port number:
+vim /usr/local/lib/python3.10/site-packages/bots/config/bots.ini
+
+[webserver]
+#webserver in development or production. default is production
+environment = production
+#port at which at bots-gui is server. default is 8080
+port = 8080
+
+#open this port in the firewall:
+firewall-cmd --zone=public --permanent --add-port 8080/tcp
+firewall-cmd --reload
+
+#run the webserver again and its up and running.
+/usr/local/bin/bots-webserver.py
+#check your ip if you get login page.
+http://192.168.70.2:8080/
+
+
+#make bots webserver run automaticly on boot and let bots run every 30 seconds
 crontab -e
 @reboot sleep 5 && /usr/local/bin/bots-webserver.py
+*/1 * * * * /usr/local/bin/bots-engine.py
+*/1 * * * * ( sleep 30 ; /usr/local/bin/bots-engine.py)
