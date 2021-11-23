@@ -33,12 +33,12 @@ Test bots engine:
  
  
  ==Full install instruction Redhat 3.8==
- during install of redhat i created a user ediflex
+#during install of redhat i created a user ediflex
  
 #install all packeages neede to install latest version of python.
 dnf install git make gcc openssl-devel libffi-devel sqlite-devel
 
-cd /home/dediflex/
+cd /home/ediflex/
 git clone https://github.com/bjorns163/bots
 
 cd /tmp/
@@ -61,7 +61,7 @@ cd /tmp/
 rm -rf Python-3.10.0/
 rm -f Python-3.10.0.tgz
 
-
+#optional
 #link command python / pip  and python3 / pip3 to this version of python and pip
 
 sudo ln -fs /usr/local/bin/python3.10 /usr/bin/python
@@ -71,13 +71,13 @@ sudo ln -fs /usr/local/bin/pip3.10 /usr/bin/pip
 sudo ln -fs /usr/local/bin/pip3.10 /usr/bin/pip3
 
 
-cd /home/dgladmin/bots/
+cd /home/ediflex/bots/
 python3 setup_rpm.py  install
  
- #test bots 
- bots-engine.py
+#test bots 
+bots-engine.py
  
- #if all goes well you will see:
+#if all goes well you will see:
 INFO     served at port: "9000".
 INFO     platform: "Linux-4.18.0-348.el8.x86_64-x86_64-with-glibc2.28".
 INFO     machine: "x86_64".
@@ -103,9 +103,9 @@ INFO     Bots Report; type: new, time: 2021-11-23 16:16:46
     0 files received/processed in run.
     0 files send in run.
 
- #now check if webserver will run
- /usr/local/bin/bots-webserver.py
+#now check if webserver will run
+/usr/local/bin/bots-webserver.py
 
- #make bots webserver run automaticly on boot
+#make bots webserver run automaticly on boot
 crontab -e
 @reboot sleep 5 && /usr/local/bin/bots-webserver.py
