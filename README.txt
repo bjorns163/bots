@@ -20,6 +20,7 @@ install on Linux:
 setup database SQLite in:
 
   /bots/config/settings.py
+  mkdir /usr/local/lib/python3.8/site-packages/bots/botssys/sqlitedb
   cp /usr/local/lib/python3.8/site-packages/bots/install/botsdb /usr/local/lib/python3.8/site-packages/bots/botssys/sqlitedb/botsdb
 
 If you are migrating from old bots version you need to update your databasefile. For sqllite use for example https://sqlitebrowser.org/dl/
