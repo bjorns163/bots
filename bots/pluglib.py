@@ -271,7 +271,11 @@ def read_index2database(orgpluglist):
             if plugintype == 'partner':        #for partners, first the partner needs to be saved before groups can be made
                 dbobject.save()
         for key,value in plug.items():      #update object with attributes from plugin
-            setattr(dbobject,key,value)
+            if key == 'group':
+                botsglobal.logger.info('skip group')
+                #setattr(dbobject,key,value)
+            else:    
+                setattr(dbobject,key,value)
         dbobject.save()                     #and save the updated object.
         botsglobal.logger.info(_('        Write to database is OK.'))
 
