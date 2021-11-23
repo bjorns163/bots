@@ -10,6 +10,7 @@ import codecs
 import django
 from django.core import serializers
 from django.utils.translation import ugettext as _
+from django.core.exceptions import FieldDoesNotExist
 from . import models
 from . import botslib
 from . import botsglobal
@@ -205,7 +206,7 @@ def read_index2database(orgpluglist):
         for key in list(plug.keys()):
             try:
                 table._meta.get_field(key)
-            except django.db.models.fields.FieldDoesNotExist:
+            except FieldDoesNotExist:
                 del plug[key]
 
         #get key(s), put in dict 'sleutel'
