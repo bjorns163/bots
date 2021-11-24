@@ -36,7 +36,7 @@ Test bots engine:
 #during install of redhat i created a user ediflex
  
 #install all packeages neede to install latest version of python.
-dnf install git make gcc openssl-devel libffi-devel sqlite-devel
+dnf install git make gcc gcc-c++ openssl-devel libffi-devel sqlite-devel
 
 cd /home/ediflex/
 git clone https://github.com/bjorns163/bots
