@@ -913,6 +913,7 @@ class json(Grammar):
         'N':'N',        #numerical, fixed decimal. Fixed nr of decimals; if no decimal used: whole number, integer
         'R':'R',        #numerical, any number of decimals; the decimal point is 'floating'
         'I':'I',        #numercial, implicit decimal
+        'AR':'AR',      #Array value
         }
     defaultsyntax = {
         'charset':'utf-8',
