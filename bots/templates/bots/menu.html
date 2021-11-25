@@ -65,8 +65,9 @@
           Configuration
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="/admin/bots/routes/">Routes</a>
           <a class="dropdown-item" href="/admin/bots/channel/">Channels</a>
+          <a class="dropdown-item" href="/admin/bots/routes/">Routes</a>
+																		   
 	  <a class="dropdown-item" href="/admin/bots/translate/">Translations</a>
           <a class="dropdown-item" href="/admin/bots/partner/">Partners</a>
           <a class="dropdown-item" href="/admin/bots/partnergroep/">Partnergroups</a>
@@ -129,7 +130,7 @@
       {% if custom_menus %}
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Custom menus
+          {{ custom_menuname }}
         </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           {% for key,value in custom_menus %}
