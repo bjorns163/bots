@@ -50,6 +50,7 @@ def start():
     commandspossible = ['--automaticretrycommunication','--resend','--rereceive','--new']
     commandstorun = []
     routestorun = []    #list with routes to run
+    use_routestorun = []
     do_cleanup_parameter = False
     for arg in sys.argv[1:]:
         if arg.startswith('-c'):
