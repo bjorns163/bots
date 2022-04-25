@@ -324,7 +324,8 @@ def extractpdf(ta_from,endstatus,**argv):
         If the PDF is just an image, all bets are off. Maybe try OCR, good luck with that!
         Mike Griffin 14/12/2011
     '''
-    from pdfminer.pdfinterp import PDFResourceManager, process_pdf
+    from pdfminer.pdfinterp import PDFResourceManager,PDFPageInterpreter
+    from pdfminer.pdfpage import PDFPage
     from pdfminer.converter import TextConverter
     from pdfminer.layout import LAParams, LTContainer, LTText, LTTextBox
     import csv
@@ -362,19 +363,27 @@ def extractpdf(ta_from,endstatus,**argv):
             for y in sorted(lines.keys()):
                 line = lines[y]
                 lineid += 1
-                csvdata = [ltpage.pageid,lineid] # first 2 columns are page and line numbers
+                csvdata = [str(ltpage.pageid),str(lineid)] # first 2 columns are page and line numbers
 
                 # group the x values (fields) within group tolerance
                 p = 0
-                field_txt = ''
+                field_txt = b''
                 for x in sorted(line.keys()):
-                    gap = x - p
+                    gap = int(x) - p
                     if p > 0 and gap > x_group:
                         csvdata.append(field_txt)
-                        field_txt = ''
+                        field_txt = b''
                     field_txt += line[x]
                     p = x
-                csvdata.append(field_txt)
+                if type(field_txt) is bytes:
+                    csvdata.append(field_txt.decode(charset) )
+                else:
+                    csvdata.append(field_txt)
+                for x in csvdata:
+                    try:
+                        csvdata[x] = x.encode(charset)
+                    except:
+                        AttributeError
                 csvout.writerow(csvdata)
             if lineid == 0:
                 raise botslib.InMessageError(_('PDF text extraction failed, it may contain just image(s)?'))
