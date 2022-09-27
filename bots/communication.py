@@ -731,7 +731,7 @@ class file(_comsession):
         ''' gets files from filesystem.
         '''
         frompath = botslib.join(self.channeldict['path'],self.channeldict['filename'])
-        filelist = sorted(filename for filename in glob.iglob(frompath) if os.path.isfile(filename))
+        filelist = sorted((filename for filename in glob.iglob(frompath) if os.path.isfile(filename)), key=os.path.getmtime)
         startdatetime = datetime.datetime.now()
         remove_ta = False
         for fromfilename in filelist:
@@ -1774,7 +1774,7 @@ class communicationscript(_comsession):
                         break
         else:   #all files have been set ready by external communicationscript using 'connect'.
             frompath = botslib.join(self.channeldict['path'], self.channeldict['filename'])
-            filelist = sorted(filename for filename in glob.iglob(frompath) if os.path.isfile(filename))
+            filelist = sorted((filename for filename in glob.iglob(frompath) if os.path.isfile(filename)), key=os.path.getmtime)
             remove_ta = False
             for fromfilename in filelist:
                 try:
