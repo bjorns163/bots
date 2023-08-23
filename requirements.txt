@@ -3,6 +3,7 @@ psycopg2-binary
 six
 cherrypy==18.6.1
 django-crispy-forms
+crispy-bootstrap4
 genshi
 xlrd
 xlsxwriter
