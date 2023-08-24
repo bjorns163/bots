@@ -324,6 +324,7 @@ def extractpdf(ta_from,endstatus,**argv):
         If the PDF is just an image, all bets are off. Maybe try OCR, good luck with that!
         Mike Griffin 14/12/2011
     '''
+    #from pdfminer.pdfinterp import PDFResourceManager, process_pdf
     from pdfminer.pdfinterp import PDFResourceManager,PDFPageInterpreter
     from pdfminer.pdfpage import PDFPage
     from pdfminer.converter import TextConverter
@@ -375,10 +376,10 @@ def extractpdf(ta_from,endstatus,**argv):
                         field_txt = b''
                     field_txt += line[x]
                     p = x
-                if type(field_txt) is bytes:
-                    csvdata.append(field_txt.decode(charset) )
-                else:
-                    csvdata.append(field_txt)
+                #if type(field_txt) is bytes:
+                csvdata.append(field_txt.decode(charset) )
+                #else:
+                #    csvdata.append(field_txt)
                 for x in csvdata:
                     try:
                         csvdata[x] = x.encode(charset)
@@ -403,16 +404,20 @@ def extractpdf(ta_from,endstatus,**argv):
         doublequote = False
 
     try:
-        pdf_stream = botslib.opendata_bin(ta_from.filename, 'rb')
+        pdf_stream = botslib.opendata_bin(ta_from.filename,'rb')
         ta_to = ta_from.copyta(status=endstatus)
         tofilename = unicode(ta_to.idta)
-        csv_stream = botslib.opendata_bin(tofilename,'wb')
+        csv_stream = botslib.opendata_bin(tofilename,'w')
         csvout = csv.writer(csv_stream, quotechar=quotechar, delimiter=field_sep, doublequote=doublequote, escapechar=escape)
 
         # Process PDF
         rsrcmgr = PDFResourceManager(caching=True)
-        device = CsvConverter(rsrcmgr, csv_stream, codec=charset)
-        process_pdf(rsrcmgr, device, pdf_stream, pagenos=set(), password=password, caching=True, check_extractable=True)
+
+        device = CsvConverter(rsrcmgr, csv_stream)#, codec=charset)
+        #process_pdf(rsrcmgr, device, pdf_stream, pagenos=set(), password=password, caching=True, check_extractable=True)
+        interpreter = PDFPageInterpreter(rsrcmgr, device)
+        for page in PDFPage.get_pages(pdf_stream,  pagenos=set(),maxpages=0, password=password,caching=True, check_extractable=True):
+            interpreter.process_page(page)
 
         device.close()
         pdf_stream.close()
