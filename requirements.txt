@@ -12,3 +12,4 @@ paramiko
 Crypto
 pycrypto
 pdfminer
+openpyxl
