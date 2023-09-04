@@ -821,7 +821,8 @@ class excel(csv):
             file is first converted to csv using python module xlrd
         '''
         try:
-            self.xlrd = botslib.botsbaseimport('xlrd')
+            #self.xlrd = botslib.botsbaseimport('xlrd')
+            self.openpyxl = botslib.botsbaseimport('openpyxl')
         except ImportError:
             raise ImportError(_('Dependency failure: editype "excel" requires python library "xlrd".'))
         import csv as csvlib
@@ -829,19 +830,19 @@ class excel(csv):
             import StringIO
         except:
             import io as StringIO
-        
+
         self.messagegrammarread(typeofgrammarfile='grammars')
         self.ta_info['charset'] = self.defmessage.syntax['charset']      #always use charset of edi file.
         if self.ta_info['escape']:
             doublequote = False
         else:
             doublequote = True
-        
+
         botsglobal.logger.debug('Read edi file "%(filename)s".',self.ta_info)
         #xlrd reads excel file; python's csv modules write this to file-like StringIO (as utf-8); read StringIO as self.rawinput; decode this (utf-8->unicode)
         infilename = botslib.abspathdata(self.ta_info['filename'])
         try:
-            xlsdata = self.read_xls(infilename)
+            xlsdata = self.read_xlsx(infilename)
         except:
             txt = botslib.txtexc()
             botsglobal.logger.error(_('Excel extraction failed, may not be an Excel file? Error:\n%(txt)s'),
@@ -868,28 +869,42 @@ class excel(csv):
         del self.lex_records
         self.checkmessage(self.root,self.defmessage)
 
-    def read_xls(self,infilename):
-        # Read excel first sheet into a 2-d array
-        book       = self.xlrd.open_workbook(infilename)
-        sheet      = book.sheet_by_index(0)
+    def read_xlsx(self, infilename):
+        import shutil
+        import os
+        temp_filename = infilename + ".xlsx"
+        shutil.copy(infilename, temp_filename)
         xlsdata = []
-        for row in range(sheet.nrows):
-            (types, values) = (sheet.row_types(row), sheet.row_values(row))
-            xlsdata.append(map(lambda t,v : self.format_excelval(book,t,v,False),types, values))
+        book = self.openpyxl.load_workbook(temp_filename)
+        sheet = book.active
+        max_column_count = 0
+        for row in sheet.iter_rows(values_only=True):
+            # Check if all cells in the row are empty (None)
+            if any(row):
+                max_column_count = max(max_column_count, len(row))
+                xlsdata.append(row)
+        # Remove empty columns at the end
+        if xlsdata:
+            xlsdata = [row[:max_column_count] for row in xlsdata]
+
+        book.close()
+        os.remove(temp_filename)
         return xlsdata
-    #-------------------------------------------------------------------------------
-    def format_excelval(self,book,datatype,value,wanttupledate):
-        #  Convert excel data for some data types
-        if datatype == 2:
+        
+    def format_excelval(self, datatype, value, wanttupledate):
+        if datatype == openpyxl.cell.cell.TYPE_NUMERIC:
             if value == int(value):
                 value = int(value)
-        elif datatype == 3:
-            datetuple = self.xlrd.xldate_as_tuple(value, book.datemode)
-            value = datetuple if wanttupledate else self.tupledate_to_isodate(datetuple)
-        elif datatype == 5:
-            value = self.xlrd.error_text_from_code[value]
+        elif datatype == openpyxl.cell.cell.TYPE_DATE:
+            if wanttupledate:
+                value = value
+            else:
+                value = value.isoformat()  # Convert to ISO date format
+        elif datatype == openpyxl.cell.cell.TYPE_ERROR:
+            value = openpyxl.utils.get_error_message(value)
+
         return value
-    #-------------------------------------------------------------------------------
+
     def tupledate_to_isodate(self,tupledate):
         # Turns a gregorian (year, month, day, hour, minute, nearest_second) into a
         # standard YYYY-MM-DDTHH:MM:SS ISO date.
@@ -898,6 +913,7 @@ class excel(csv):
         datestring = '%04d-%02d-%02d'  % (y,m,d)    if filter(nonzero,(y,m,d)) else ''
         timestring = 'T%02d:%02d:%02d' % (hh,mm,ss) if filter(nonzero,(hh,mm,ss)) or not datestring else ''
         return datestring+timestring
+
 
 
 class edifact(var):
