@@ -67,7 +67,6 @@ def launcher(logger,queue,lauchfrequency,maxruntime):
     time.sleep(3)   #allow jobqserver to start
     while True:
         job = queue.get(block=True,timeout=None)
-        queue.
         jobnumber = job[1]
         task_to_run = job[2]
         # Start a timer thread for maxruntime error
@@ -128,7 +127,7 @@ def start():
     #start launcher thread
     lauchfrequency = 5  #botsglobal.ini.getint('jobqueue','lauchfrequency',5)
     maxruntime = 60 #botsglobal.ini.getint('settings','maxruntime',60)
-    for thread in range(nr_threads)
+    for thread in range(nr_threads):
         launcher_thread = threading.Thread(name='launcher', target=launcher, args=(logger,queue,lauchfrequency,maxruntime))
         launcher_thread.start()
         #~ logger.info('Jobqueue launcher started.')
