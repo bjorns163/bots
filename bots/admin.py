@@ -269,22 +269,4 @@ class UniekAdmin(BotsAdmin):     #AKA counters
                     }),
     )
 admin.site.register(models.uniek,UniekAdmin)
-admin.site.unregister(User)
-
-class BaseUserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'first_name', 'last_name', 'email', 'is_active', 'is_staff', 'is_superuser', 'date_joined', 'last_login')
-    fieldsets = (
-        (None, {'fields': ('username', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'email')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        ('Important dates', {'fields': ('last_login', 'date_joined')}),
-    )
-    add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2'),
-        }),
-    )
-
-admin.site.register(User, BaseUserAdmin)
 
