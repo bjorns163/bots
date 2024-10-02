@@ -1,7 +1,7 @@
-django==3.2.20
+django==3.2.25
 psycopg2-binary
 six
-cherrypy==18.8.0
+cherrypy==18.10.0
 django-crispy-forms
 crispy-bootstrap4
 genshi
